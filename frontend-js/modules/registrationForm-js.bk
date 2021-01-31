@@ -1,0 +1,68 @@
+export default class RegistrationForm
+{
+    constructor()
+    {
+        this.allFields = document.querySelectorAll("#registration-form .form-control");
+        this.username = document.querySelector("#username-register");
+        this.events();
+        this.insertValidationElements();
+        this.username.previousValue = "";
+        
+    }
+
+// Events
+events()
+{
+    this.username.addEventListener("keyup", () =>
+    {
+        this.isDifferent(this.username, this.usernameHandler)
+    })
+}
+
+// Methods
+isDifferent(element, handler)
+{
+    if (element.previousValue != element.value)
+    {
+        handler.call(this)
+    }
+    element.previousValue = element.value;
+}
+
+usernameHandler()
+{
+    this.username.errors = false;
+    this.usernameImmediately();
+    clearTimeout(this.username.timer);
+    this.username.timer = setTimeout(() => this.usernameAfterDelay(), 3000)
+}
+
+usernameImmediately()
+{
+    if (this.username.value != "" && !/^([a-zA-Z0-9]+)$/.test(this.username.value))
+    {
+        this.showValidationError(this.username, "Username can only contain letters and numbers.");
+        alert('usernameImmediately OK')
+    }
+}
+
+showValidationError(element, message)
+{
+    element.nextElementSibling.innerHTML = message;
+    element.nextElementSibling.classList.add("liveValidateMessage--visible");
+    alert('showValidationError OK')
+}
+
+usernameAfterDelay()
+{
+    alert('usernameAfterDelay OK')
+}
+
+insertValidationElements()
+{
+    this.allFields.forEach(function(element)
+    {
+        element.insertAdjacentHTML('afterend', '<div class="alert alert-danger small liveValidateMessage"></div>');
+    })
+}
+}
